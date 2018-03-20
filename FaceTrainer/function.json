@@ -1,0 +1,12 @@
+{
+  "bindings": [
+    {
+      "name": "myBlob",
+      "type": "blobTrigger",
+      "direction": "in",
+      "path": "trainingimages/{name}",
+      "connection": "celebfaces9b36_STORAGE"
+    }
+  ],
+  "disabled": false
+}
