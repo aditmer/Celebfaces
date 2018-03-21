@@ -8,14 +8,15 @@ namespace CelebFaces
     public static class TrainFaces
     {
         [FunctionName("TrainFaces")]
-        public static async System.Threading.Tasks.Task RunAsync([BlobTrigger("trainingimages/{name}", Connection = "celebfaces9b36")]Stream myBlob, string fileName, TraceWriter log)
+        public static async System.Threading.Tasks.Task RunAsync([BlobTrigger("trainingimages/{name}", Connection = "celebfaces9b36_STORAGE")]Stream myBlob, string fileName, TraceWriter log)
         {
             log.Info($"C# Blob trigger function Processed blob\n Name:{fileName} \n Size: {myBlob.Length} Bytes");
 
             var faceServiceClient = new FaceServiceClient(Keys.FaceAPIKey);
             string personGroupId = "celebs";
+            string nameNoExt = System.IO.Path.GetFileNameWithoutExtension(fileName);
 
-            var celeb = await faceServiceClient.GetPersonInLargePersonGroupAsync(personGroupId, new System.Guid(fileName));
+            var celeb = await faceServiceClient.GetPersonInLargePersonGroupAsync(personGroupId, new System.Guid(nameNoExt));
             
 
             
