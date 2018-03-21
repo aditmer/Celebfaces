@@ -29,6 +29,7 @@ namespace CelebFaces
             name = name ?? data?.name;
 
             var faceServiceClient = new FaceServiceClient(Keys.FaceAPIKey);
+            CreatePersonResult celeb1;
 
             // Create an empty PersonGroup
             string personGroupId = "celebs";
@@ -43,31 +44,29 @@ namespace CelebFaces
                 
             }
 
-            if (sErrorMessage == "")
-            {
+            
                 
-                try
-                {
+                
                     // Define celeb
-                    CreatePersonResult celeb1 = await faceServiceClient.CreatePersonInLargePersonGroupAsync(
+                    celeb1 = await faceServiceClient.CreatePersonInLargePersonGroupAsync(
                         // Id of the PersonGroup that the person belonged to
                         personGroupId,
                         // Name of the person (passed into the fumction)
                         name
                     );
                     
-                }
-                catch (Exception ex)
-                {
-                    log.Info($"Error creating person: {ex.Message}");
-                    sErrorMessage = ex.Message;
-                }
-            }
+                //}
+                //catch (Exception ex)
+                //{
+                //    log.Info($"Error creating person: {ex.Message}");
+                //    sErrorMessage = ex.Message;
+                //}
+            
 
             if (sErrorMessage == "")
             {
                 return name != null
-                ? (ActionResult) new OkObjectResult($"We succesfully created a record for {name}.  Please now upload photos of them so we can train the model with thier face.")
+                ? (ActionResult) new OkObjectResult($"We succesfully created a record for {name}.  Please now upload photos of them so we can train the model with thier face.  The photos need to have this id as the file name:  {celeb1.PersonId}")
                 : new BadRequestObjectResult("Please pass a name on the query string or in the request body");
             }
             else return new BadRequestObjectResult(sErrorMessage);
