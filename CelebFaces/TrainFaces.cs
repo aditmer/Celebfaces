@@ -20,7 +20,7 @@ namespace CelebFaces
 
             
             // Detect faces in the image and add to the celebrity
-            await faceServiceClient.AddPersonFaceAsync(
+            await faceServiceClient.AddPersonFaceInLargePersonGroupAsync(
                 personGroupId, celeb.PersonId, myBlob);
                 
            
