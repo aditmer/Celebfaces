@@ -22,8 +22,9 @@ namespace CelebFaces
             // Detect faces in the image and add to the celebrity
             await faceServiceClient.AddPersonFaceInLargePersonGroupAsync(
                 personGroupId, celeb.PersonId, myBlob);
-                
-           
+
+            //train the model with the new image
+            await faceServiceClient.TrainLargePersonGroupAsync(personGroupId);
         }
     }
 }
