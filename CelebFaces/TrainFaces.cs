@@ -1,31 +1,45 @@
+
 using System.IO;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Azure.WebJobs.Host;
+using Newtonsoft.Json;
 using Microsoft.ProjectOxford.Face;
+using System.Threading.Tasks;
 
 namespace CelebFaces
 {
     public static class TrainFaces
     {
         [FunctionName("TrainFaces")]
-        public static async System.Threading.Tasks.Task Run([BlobTrigger("trainingimages/{fileName}", Connection = "AzureWebJobsStorage")]Stream myBlob, string fileName, TraceWriter log)
+        public static async  Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)]HttpRequest req, TraceWriter log)
         {
-            log.Info($"C# Blob trigger function Processed blob\n Name:{fileName} \n Size: {myBlob.Length} Bytes");
+            log.Info("C# HTTP trigger function to train the face model has been triggered.");
 
             var faceServiceClient = new FaceServiceClient(Keys.FaceAPIKey);
             string personGroupId = "celebs";
-            string nameNoExt = System.IO.Path.GetFileNameWithoutExtension(fileName);
 
-            var celeb = await faceServiceClient.GetPersonInLargePersonGroupAsync(personGroupId, new System.Guid(nameNoExt));
-            
+            string sReturn = "";
 
-            
-            // Detect faces in the image and add to the celebrity
-            await faceServiceClient.AddPersonFaceInLargePersonGroupAsync(
-                personGroupId, celeb.PersonId, myBlob);
+            var trainingStatus = await faceServiceClient.GetLargePersonGroupTrainingStatusAsync(personGroupId);
 
-            //train the model with the new image
-            await faceServiceClient.TrainLargePersonGroupAsync(personGroupId);
+            //if trianing is not already in progress, then train the model with the new images
+            if (trainingStatus.Status != Microsoft.ProjectOxford.Face.Contract.Status.Running)
+            {
+                await faceServiceClient.TrainLargePersonGroupAsync(personGroupId);
+                sReturn = "We have started training the model.";
+            }
+            else
+            {
+                sReturn = "The model training is already underway.";
+            }
+
+
+            return (ActionResult) new OkObjectResult(sReturn);
+                
+               
         }
     }
 }
