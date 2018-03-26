@@ -36,11 +36,11 @@ namespace CelebFaces
             try
             {
                 
-                await faceServiceClient.CreateLargePersonGroupAsync(personGroupId, "Celebs");
+                await faceServiceClient.CreatePersonGroupAsync(personGroupId, "Celebs");
             }
             catch (Exception ex)
             {
-                log.Info($"Error creating LargePersonGroup: {ex.Message}");
+                log.Info($"Error creating PersonGroup: {ex.Message}");
                 
             }
 
@@ -48,7 +48,7 @@ namespace CelebFaces
                 
                 
                     // Define celeb
-                    celeb1 = await faceServiceClient.CreatePersonInLargePersonGroupAsync(
+                    celeb1 = await faceServiceClient.CreatePersonInPersonGroupAsync(
                         // Id of the PersonGroup that the person belonged to
                         personGroupId,
                         // Name of the person (passed into the fumction)

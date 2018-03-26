@@ -23,12 +23,12 @@ namespace CelebFaces
 
             string sReturn = "";
 
-            var trainingStatus = await faceServiceClient.GetLargePersonGroupTrainingStatusAsync(personGroupId);
+            var trainingStatus = await faceServiceClient.GetPersonGroupTrainingStatusAsync(personGroupId);
 
             //if trianing is not already in progress, then train the model with the new images
             if (trainingStatus.Status != Microsoft.ProjectOxford.Face.Contract.Status.Running)
             {
-                await faceServiceClient.TrainLargePersonGroupAsync(personGroupId);
+                await faceServiceClient.TrainPersonGroupAsync(personGroupId);
                 sReturn = "We have started training the model.";
             }
             else

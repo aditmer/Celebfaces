@@ -16,12 +16,12 @@ namespace CelebFaces
             string personGroupId = "celebs";
             string nameNoExt = System.IO.Path.GetFileNameWithoutExtension(fileName);
 
-            var celeb = await faceServiceClient.GetPersonInLargePersonGroupAsync(personGroupId, new System.Guid(nameNoExt));
+            var celeb = await faceServiceClient.GetPersonInPersonGroupAsync(personGroupId, new System.Guid(nameNoExt));
             
 
             
             // Detect faces in the image and add to the celebrity
-            await faceServiceClient.AddPersonFaceInLargePersonGroupAsync(
+            await faceServiceClient.AddPersonFaceInPersonGroupAsync(
                 personGroupId, celeb.PersonId, myBlob);
 
             
