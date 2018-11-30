@@ -8,6 +8,6 @@ namespace CelebFaces
 {
     class Keys
     {
-        public const string FaceAPIKey = "81038c19445e4cc7bf52768715a49b75";
+        public const string FaceAPIKey = "b2ea4619f45c452a9edbf161928e3160";
     }
 }
